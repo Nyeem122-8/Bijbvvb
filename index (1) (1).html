@@ -1,231 +1,162 @@
-
-<!DOCTYPE html><html lang="en"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALL GAME 1Min</title>
-    <script src="js/chart.js"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #333;
-            margin: 0;
-            padding: 0;
-            color: #fff;
-        }
-        h1, h2 {
-            color: #007bff;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .card {
-            max-width: 90%;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #444;
-            box-shadow: 3 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        #dataTable, #predictionHistoryTable {
-            width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #555;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #666;
-        }
-        th {
-            background-color: #007bff;
-            color: black;
-            font-weight: bold;
-        }
-        td {
-            background-color: #666;
-        }
-        tr:nth-child(even) td {
-            background-color: #777;
-        }
-        tr:hover td {
-            background-color: #888;
-        }
-        #predictionChart {
-            width: 100%;
-            height: 250px; /* Fixed height */
-            border: 2px solid #007bff;
-            border-radius: 8px;
-            background-color: #555;
-        }
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .pagination button {
-            padding: 10px 20px;
-            margin: 0 5px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: black;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .pagination button:hover {
-            background-color: #e6b800;
-            transform: scale(1.05);
-        }
-        .pagination button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        #timeRemaining {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-        }
-        #predictedNumber, #predictedPremium {
-            font-size: 18px;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .button-group {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .button-group a {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none; /* Remove underline */
-            color: white; /* Text color */
-            display: inline-block; /* Make anchor behave like a button */
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        #registerButton {
-            background-color: #007bff; /* Blue for Register */
-        }
-        #telegramButton {
-            background-color: #dc3545; /* Red for Telegram */
-        }
-        .button-group a:hover {
-            transform: scale(1.05);
-        }
-        @media (max-width: 768px) {
-            .card {
-                padding: 15px;
-            }
-            th, td {
-                padding: 8px;
-                font-size: 14px;
-            }
-            #timeRemaining {
-                font-size: 20px;
-            }
-            #predictedNumber, #predictedPremium {
-                font-size: 16px;
-            }
-            #predictionChart {
-                height: 200px; /* Adjusted height for mobile */
-            }
-        }
-        @media (max-width: 480px) {
-            th, td {
-                font-size: 12px;
-            }
-            #timeRemaining {
-                font-size: 18px;
-            }
-            #predictedNumber, #predictedPremium {
-                font-size: 14px;
-            }
-            #predictionChart {
-                height: 180px; /* Further adjustment for very small screens */
-            }
-        }
-    </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>B/S Market Pro</title>
+  <style>
+    body {
+      background-color: #0d1117;
+      font-family: 'Courier New', monospace;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    .market-display {
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 0;
+      word-spacing: 0;
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+    }
+    .B { color: #ef4444; }  /* Red for Big */
+    .S { color: #22c55e; }  /* Green for Small */
+    .timer {
+      font-size: 1.8rem;
+      color: #fbbf24;
+      margin: 1rem 0;
+    }
+    .prediction-container {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background-color: #161b22;
+    }
+    .prediction {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+      min-height: 60px;
+    }
+    .waiting {
+      color: #fbbf24;
+      font-size: 1.5rem;
+    }
+    .pattern {
+      font-size: 1.8rem;
+      margin: 1rem 0;
+      letter-spacing: 5px;
+    }
+    .chance-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .chance-box {
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      font-weight: bold;
+      width: 120px;
+    }
+    .no-chance {
+      background-color: #7f1d1d;
+      color: #fca5a5;
+      border: 1px solid #ef4444;
+    }
+    .medium-chance {
+      background-color: #854d0e;
+      color: #fde047;
+      border: 1px solid #f59e0b;
+    }
+    .high-chance {
+      background-color: #14532d;
+      color: #86efac;
+      border: 1px solid #22c55e;
+    }
+    .active-chance {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px currentColor;
+    }
+    .competition-level {
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+    }
+    .progress-container {
+      width: 100%;
+      background-color: #1e293b;
+      height: 25px;
+      border-radius: 12px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #3b82f6, #6366f1);
+      width: 0%;
+      transition: width 1s;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+      color: white;
+      font-weight: bold;
+    }
+    .flash {
+      animation: flash 0.5s;
+    }
+    @keyframes flash {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+  </style>
 </head>
 <body>
-    <h1>ALL Game</h1>
-    <div class="card">
-        <h2>Live Prediction</h2>
-        <p id="predictedNumber">Prediction :--</p>
-        <p id="predictedPremium">Enjoy: --</p>
-    </div>
-    <div class="card">
-        <h2>Timer</h2>
-        <p id="timeRemaining">--:--</p>
-        
-    <div class="button-group">
-        <a href= "https://t.me/+ORN5eQIQ6EkzMzhl id="registerButton" target="_blank">Register</a>
-        <a href="https://t.me/+ORN5eQIQ6EkzMzhl" id="telegramButton" target="_blank">Telegram</a>
-    </div>
-    </div>
-    <div class="card">
-        <h2>Latest Data</h2>
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>Issue Number</th>
-                    <th>Number</th>
-                    <th>Colour</th>
-                    <th>Premium</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data rows will be inserted here -->
-            </tbody>
-        </table>
-    </div>
-    <div class="card">
-        <h2>Prediction History</h2>
-        <table id="predictionHistoryTable">
-            <thead>
-                <tr>
-                    <th>Issue Number</th>
-                    <th>Predicted Number</th>
-                    <th>Actual Number</th>
-                    <th>Result</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <div class="pagination">
-            <button id="prevPage" disabled="">Previous</button>
-            <button id="nextPage" disabled="">Next</button>
-        </div>
-    </div>
-    <div class="card">
-        <h2>Devloper  KISHOREMAXX™</h2>
-        <div class="button-group">
-        <a href="https://t.me/+ORN5eQIQ6EkzMzhl" id="registerButton" target="_blank">Telegram Join Now!!</a>
-    </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const tableBody = document.querySelector('#dataTable tbody');
-    const predictedNumberElement = document.getElementById('predictedNumber');
-    const predictedPremiumElement = document.getElementById('predictedPremium');
-    const timerElement = document.getElementById('timeRemaining');
-    const historyTableBody = document.querySelector('#predictionHistoryTable tbody');
-    const prevPageButton = document.getElementById('prevPage');
-    const nextPageButton = document.getElementById('nextPage');
-    let predictionHistory = JSON.parse(localStorage.getItem('predictionHistory')) || [];
-    let lastPrediction = JSON.parse(localStorage.getItem('lastPrediction'));
-    let currentPrediction = JSON.parse(localStorage.getItem('currentPrediction'));
-    let currentPage = 0;
-    const itemsPerPage = 4000;
-    let timerInterval;
+  <h1>B/S Market Pro</h1>
+  
+  <!-- Timer -->
+  <div class="timer" id="timer">00:30</div>
 
-    const fetchNoAverageEmerdList = () => {
-        const requestData = {
+  <!-- Market Pattern Display -->
+  <div class="pattern" id="patternDisplay">Loading pattern...</div>
+
+  <!-- Prediction Section -->
+  <div class="prediction-container">
+    <div id="predictionLoading" class="waiting">Analyzing market (3 seconds)...</div>
+    <div id="predictionDisplay" class="prediction"></div>
+    
+    <!-- Chance Levels -->
+    <div class="chance-container">
+      <div id="noChance" class="chance-box no-chance">NO CHANCE</div>
+      <div id="mediumChance" class="chance-box medium-chance">MEDIUM</div>
+      <div id="highChance" class="chance-box high-chance">HIGH</div>
+    </div>
+    
+    <!-- Competition Level -->
+    <div class="competition-level">
+      COMPETITION LEVEL: <span id="competitionPercent">0</span>%
+      <div class="progress-container">
+        <div class="progress-bar" id="competitionProgress">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let lastIssueNumber = null;
+    let currentPattern = '';
+    let predictionHistory = [];
+
+    async function fetchMarketData() {
+      try {
+        const response = await fetch('https://crbbb.com/api/webapi/GetNoaverageEmerdList', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+          body: JSON.stringify({
             pageSize: 10,
             pageNo: 1,
             typeId: 30,
@@ -233,178 +164,181 @@ document.addEventListener('DOMContentLoaded', function() {
             random: "62d02162c2234c64b57aa4188c5810b2",
             signature: "9BF7A245709AA054E231D75C404C6527",
             timestamp: Math.floor(Date.now() / 1000)
-        };
-
-        return fetch('https://crbbb.com/api/webapi/GetNoaverageEmerdList', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                'Accept': 'application/json, text/plain, */*'
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .catch(error => console.error('Error fetching no average EMERD list data:', error));
-    };
-
-    const fetchGameIssue = () => {
-        const requestData = {
-            typeId: 1,
-            language: 0,
-            random: "f8dcb5c527814db68800e3946a2b60e8",
-            signature: "08CF7FF3339ED58D4743F4B650FCBEA9",
-            timestamp: Math.floor(Date.now() / 1000)
-        };
-
-        return fetch('https://crbbb.com/api/webapi/GetGameIssue', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                'Accept': 'application/json, text/plain, */*'
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.json())
-        .catch(error => console.error('Error fetching game issue:', error));
-    };
-
-    const categorizeNumber = (number) => {
-        if (number >= 0 && number <= 4) return 'Small';
-        if (number >= 5 && number <= 9) return 'Big';
-        return 'Unknown';
-    };
-
-    const generateRandomPrediction = () => {
-        const randomNumber = Math.floor(Math.random() * 10);
-        const randomCategory = categorizeNumber(randomNumber);
-        return { number: randomNumber, category: randomCategory };
-    };
-
-    const updateDataAndPrediction = () => {
-        fetchNoAverageEmerdList()
-            .then(data => {
-                const list = data.data.list;
-                tableBody.innerHTML = '';
-                list.forEach(item => {
-                    const numberCategory = categorizeNumber(Number(item.number));
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.issueNumber}</td>
-                        <td>${item.number} (${numberCategory})</td>
-                        <td>${item.colour}</td>
-                        <td>${item.premium}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-
-                const latestIssue = list[0].issueNumber;
-                const latestActual = Number(list[0].number);
-                const actualCategory = categorizeNumber(latestActual);
-
-                if (!lastPrediction || lastPrediction.issueNumber !== latestIssue) {
-                    if (lastPrediction) {
-                        const result = (lastPrediction.category === actualCategory) ? 'Win' : 'Loss';
-                        predictionHistory.unshift({
-                            issueNumber: latestIssue,
-                            predictedNumber: lastPrediction.number,
-                            actualNumber: latestActual,
-                            result: result
-                        });
-                        localStorage.setItem('predictionHistory', JSON.stringify(predictionHistory));
-                    }
-
-                    currentPrediction = generateRandomPrediction();
-                    currentPrediction.issueNumber = latestIssue;
-                    localStorage.setItem('currentPrediction', JSON.stringify(currentPrediction));
-                }
-
-                predictedNumberElement.textContent = `Prediction: ${currentPrediction.number} (${currentPrediction.category})`;
-                predictedPremiumElement.textContent = `:N/A`;
-
-                lastPrediction = {
-                    issueNumber: latestIssue,
-                    number: currentPrediction.number,
-                    category: currentPrediction.category
-                };
-                localStorage.setItem('lastPrediction', JSON.stringify(lastPrediction));
-
-                updatePredictionHistoryTable();
-            })
-            .catch(error => console.error('Error updating data and prediction:', error));
-    };
-
-    const updatePredictionHistoryTable = () => {
-        historyTableBody.innerHTML = '';
-
-        const start = currentPage * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedHistory = predictionHistory.slice(start, end);
-
-        paginatedHistory.forEach(entry => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${entry.issueNumber}</td>
-                <td>${entry.predictedNumber}</td>
-                <td>${entry.actualNumber}</td>
-                <td>${entry.result}</td>
-            `;
-            historyTableBody.appendChild(row);
+          })
         });
 
-        prevPageButton.disabled = currentPage === 0;
-        nextPageButton.disabled = end >= predictionHistory.length;
-    };
+        const data = await response.json();
+        const results = data?.data?.list;
 
-    const updateTimer = () => {
-        fetchGameIssue()
-            .then(data => {
-                const { endTime } = data.data;
-                const endDate = new Date(endTime);
-                const now = new Date();
-                const remainingTimeMs = endDate - now;
-
-                if (remainingTimeMs <= 0) {
-                    timerElement.textContent = "Time Remaining: 00:00:00";
-                    clearInterval(timerInterval);
-                    updateDataAndPrediction();
-                    updateTimer();
-                } else {
-                    const hours = String(Math.floor(remainingTimeMs / (1000 * 60 * 60))).padStart(2, '0');
-                    const minutes = String(Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-                    const seconds = String(Math.floor((remainingTimeMs % (1000 * 60)) / 1000)).padStart(2, '0');
-                    timerElement.textContent = `Time Remaining: ${hours}:${minutes}:${seconds}`;
-                }
-            })
-            .catch(error => console.error('Error fetching game issue for timer:', error));
-    };
-
-    // Pagination controls
-    prevPageButton.addEventListener('click', () => {
-        if (currentPage > 0) {
-            currentPage--;
-            updatePredictionHistoryTable();
+        if (!results || results.length === 0) {
+          console.error("No data received");
+          return;
         }
-    });
 
-    nextPageButton.addEventListener('click', () => {
-        if ((currentPage + 1) * itemsPerPage < predictionHistory.length) {
-            currentPage++;
-            updatePredictionHistoryTable();
+        const latestIssue = results[0].issueNumber;
+        if (latestIssue !== lastIssueNumber) {
+          lastIssueNumber = latestIssue;
+          updatePatternDisplay(results);
+          showPredictionWithDelay(results);
         }
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        document.getElementById("patternDisplay").textContent = "Error";
+      }
+    }
+
+    function updatePatternDisplay(data) {
+      let patternString = "";
+      data.forEach(item => {
+        patternString += parseInt(item.number) <= 4 ? "S" : "B";
+      });
+      
+      currentPattern = patternString;
+      document.getElementById("patternDisplay").innerHTML = "";
+      
+      // Add each character with proper coloring
+      for (let char of patternString) {
+        const span = document.createElement("span");
+        span.className = char;
+        span.textContent = char;
+        document.getElementById("patternDisplay").appendChild(span);
+      }
+      
+      // Store last 3 results for prediction
+      predictionHistory = patternString.slice(0, 3).split("");
+      if (predictionHistory.length > 3) {
+        predictionHistory = predictionHistory.slice(0, 3);
+      }
+    }
+
+    function showPredictionWithDelay(data) {
+      const predictionDisplay = document.getElementById("predictionDisplay");
+      const predictionLoading = document.getElementById("predictionLoading");
+      
+      // Show loading message
+      predictionDisplay.textContent = "";
+      predictionLoading.style.display = "block";
+      
+      // Hide prediction for 3 seconds
+      setTimeout(() => {
+        predictionLoading.style.display = "none";
+        makePrediction(data);
+      }, 3000);
+    }
+
+    function makePrediction(data) {
+      const prediction = calculatePrediction();
+      const predictionDisplay = document.getElementById("predictionDisplay");
+      
+      // Flash animation
+      predictionDisplay.classList.add("flash");
+      
+      // Display prediction
+      predictionDisplay.innerHTML = prediction === "B" ? 
+        '<span class="B">BIG</span>' : '<span class="S">SMALL</span>';
+      
+      // Update chance levels
+      updateChanceLevels(prediction);
+      
+      // Update competition level
+      updateCompetitionLevel(prediction);
+      
+      // Remove flash after animation
+      setTimeout(() => {
+        predictionDisplay.classList.remove("flash");
+      }, 500);
+    }
+
+    function calculatePrediction() {
+      // Advanced pattern detection algorithm
+      
+      // 1. Check for strong trends (4+ same in last 5)
+      const last5 = currentPattern.slice(0, 5);
+      const bigCount = (last5.match(/B/g) || []).length;
+      const smallCount = (last5.match(/S/g) || []).length;
+      
+      if (bigCount >= 4) return "S"; // High chance of reversal after many B
+      if (smallCount >= 4) return "B"; // High chance of reversal after many S
+      
+      // 2. Check for alternation pattern
+      if (/^(BSBSB|SBSBS)$/.test(last5)) {
+        return currentPattern[0] === "B" ? "S" : "B";
+      }
+      
+      // 3. Default to opposite of last result
+      return currentPattern[0] === "B" ? "S" : "B";
+    }
+
+    function updateChanceLevels(prediction) {
+      // Reset all chances
+      document.getElementById("noChance").classList.remove("active-chance");
+      document.getElementById("mediumChance").classList.remove("active-chance");
+      document.getElementById("highChance").classList.remove("active-chance");
+      
+      // Calculate probabilities (simplified example)
+      const last3 = currentPattern.slice(0, 3);
+      let highChance = false;
+      let mediumChance = false;
+      
+      // If all 3 same, high chance of opposite
+      if (/^(BBB|SSS)$/.test(last3)) {
+        highChance = true;
+      } 
+      // If 2 same, medium chance of opposite
+      else if (/^(BBS|SSB|BSB|SBS)$/.test(last3)) {
+        mediumChance = true;
+      }
+      
+      // Activate the appropriate chance box
+      if (highChance) {
+        document.getElementById("highChance").classList.add("active-chance");
+      } else if (mediumChance) {
+        document.getElementById("mediumChance").classList.add("active-chance");
+      } else {
+        document.getElementById("noChance").classList.add("active-chance");
+      }
+    }
+
+    function updateCompetitionLevel(prediction) {
+      // Calculate confidence level (70-95%)
+      const last5 = currentPattern.slice(0, 5);
+      let confidence = 70;
+      
+      // Increase confidence for strong patterns
+      if (/^(BBBBB|SSSSS)$/.test(last5)) {
+        confidence = 95;
+      } else if (/^(BBBB|SSSS)$/.test(last5)) {
+        confidence = 85;
+      } else if (/^(BBB|SSS)$/.test(last5)) {
+        confidence = 75;
+      }
+      
+      // Update display
+      document.getElementById("competitionPercent").textContent = confidence;
+      document.getElementById("competitionProgress").style.width = confidence + "%";
+      document.getElementById("competitionProgress").textContent = confidence + "%";
+    }
+
+    function updateTimer() {
+      const now = new Date();
+      const baseTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 5, 30, 0);
+      if (now < baseTime) baseTime.setDate(baseTime.getDate() - 1);
+      
+      const elapsedSeconds = Math.floor((now - baseTime) / 1000);
+      const remainingSeconds = 30 - (elapsedSeconds % 30);
+
+      document.getElementById("timer").textContent = 
+        `00:${String(remainingSeconds).padStart(2, '0')}`;
+
+      if (remainingSeconds === 30) fetchMarketData();
+      setTimeout(updateTimer, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateTimer();
+      fetchMarketData();
     });
-
-    // Initialize data and start the timer
-    updateDataAndPrediction();
-    updateTimer();
-    timerInterval = setInterval(() => {
-        updateTimer();
-        updateDataAndPrediction();
-    }, 1000); // Update every 10 seconds
-
-    // Load initial prediction history table
-    updatePredictionHistoryTable();
-});
-</script>
-
-  
-</div></body></html>
+  </script>
+</body>
+</html>
