@@ -25,9 +25,11 @@ if (currentIssue !== lastIssueNumber) {
     time: new Date().toISOString(),
   });
   console.log("✅ নতুন নাম্বার আপলোড:", latest.number);
+} else {
+  console.log("ℹ️ একই নাম্বার, কিছুই করিনি:", latest.number);
 }
 
-} catch (err) { console.error("Fetch error:", err.message); } }
+} catch (err) { console.error("❌ Fetch error:", err.message); } }
 
 // ✅ প্রতি ৩০ সেকেন্ডে একবার করে ডেটা চেক করবে setInterval(fetchAndUpdate, 30 * 1000);
 
