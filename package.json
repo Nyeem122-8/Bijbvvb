@@ -1,0 +1,13 @@
+{
+  "name": "firebase-market-sync",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "firebase": "^9.22.2",
+    "node-fetch": "^2.6.7"
+  }
+}
